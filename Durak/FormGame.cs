@@ -58,7 +58,7 @@ namespace Durak
             ["Spides"] = Properties.Resources.Spides,
         };
         Game game = new Game();
-
+        int u = 1;
         private Point mouseOffset;
         private bool isDragging = false;
         private PictureBox draggedCard;
