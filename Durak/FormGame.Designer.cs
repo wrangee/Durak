@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cardTable = new System.Windows.Forms.DataGridView();
             this.first = new System.Windows.Forms.DataGridViewImageColumn();
             this.sec = new System.Windows.Forms.DataGridViewImageColumn();
@@ -50,14 +50,14 @@
             this.cardTable.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
             this.cardTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.cardTable.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.cardTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.ButtonFace;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.cardTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.cardTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.cardTable.ColumnHeadersVisible = false;
             this.cardTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -67,14 +67,14 @@
             this.four,
             this.five,
             this.six});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ButtonFace;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.cardTable.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.ButtonFace;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.cardTable.DefaultCellStyle = dataGridViewCellStyle6;
             this.cardTable.EnableHeadersVisualStyles = false;
             this.cardTable.GridColor = System.Drawing.SystemColors.ButtonFace;
             this.cardTable.Location = new System.Drawing.Point(413, 33);
@@ -82,7 +82,7 @@
             this.cardTable.ReadOnly = true;
             this.cardTable.RowHeadersVisible = false;
             this.cardTable.RowTemplate.Height = 80;
-            this.cardTable.Size = new System.Drawing.Size(434, 185);
+            this.cardTable.Size = new System.Drawing.Size(360, 185);
             this.cardTable.TabIndex = 0;
             // 
             // first
@@ -163,7 +163,7 @@
             // 
             // bitoButton
             // 
-            this.bitoButton.Location = new System.Drawing.Point(627, 224);
+            this.bitoButton.Location = new System.Drawing.Point(604, 224);
             this.bitoButton.Name = "bitoButton";
             this.bitoButton.Size = new System.Drawing.Size(75, 23);
             this.bitoButton.TabIndex = 5;
@@ -173,7 +173,7 @@
             // 
             // takeAllCards
             // 
-            this.takeAllCards.Location = new System.Drawing.Point(730, 224);
+            this.takeAllCards.Location = new System.Drawing.Point(685, 224);
             this.takeAllCards.Name = "takeAllCards";
             this.takeAllCards.Size = new System.Drawing.Size(75, 23);
             this.takeAllCards.TabIndex = 6;
@@ -185,7 +185,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1194, 268);
+            this.ClientSize = new System.Drawing.Size(921, 268);
             this.Controls.Add(this.takeAllCards);
             this.Controls.Add(this.bitoButton);
             this.Controls.Add(this.turnInRound);

@@ -33,13 +33,14 @@
             this.startGame = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.DeletePlayer = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(12, 63);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(173, 20);
+            this.textBox1.Size = new System.Drawing.Size(253, 20);
             this.textBox1.TabIndex = 1;
             // 
             // addPlayer
@@ -54,7 +55,7 @@
             // 
             // startGame
             // 
-            this.startGame.Location = new System.Drawing.Point(110, 98);
+            this.startGame.Location = new System.Drawing.Point(190, 98);
             this.startGame.Name = "startGame";
             this.startGame.Size = new System.Drawing.Size(75, 23);
             this.startGame.TabIndex = 2;
@@ -66,7 +67,7 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(12, 37);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(173, 20);
+            this.textBox2.Size = new System.Drawing.Size(253, 20);
             this.textBox2.TabIndex = 0;
             // 
             // label1
@@ -79,11 +80,22 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Введите имена игроков";
             // 
+            // DeletePlayer
+            // 
+            this.DeletePlayer.Location = new System.Drawing.Point(110, 98);
+            this.DeletePlayer.Name = "DeletePlayer";
+            this.DeletePlayer.Size = new System.Drawing.Size(75, 23);
+            this.DeletePlayer.TabIndex = 5;
+            this.DeletePlayer.Text = "Удалить";
+            this.DeletePlayer.UseVisualStyleBackColor = true;
+            this.DeletePlayer.Click += new System.EventHandler(this.DeletePlayer_Click);
+            // 
             // FormRegister
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(198, 145);
+            this.ClientSize = new System.Drawing.Size(277, 145);
+            this.Controls.Add(this.DeletePlayer);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.startGame);
@@ -103,6 +115,7 @@
         private System.Windows.Forms.Button startGame;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button DeletePlayer;
     }
 }
 

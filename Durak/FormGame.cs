@@ -65,6 +65,9 @@ namespace Durak
         Round currentRound;
         Deck deck;
         int bitoCounter = 0;
+        PictureBox trump = new PictureBox();
+        PictureBox backCard = new PictureBox();
+        Label deckCount = new Label();
         public FormGame(List<TextBox> names)
         {    
             foreach (var name in names)
@@ -80,24 +83,47 @@ namespace Durak
             this.currentPlayer = rounds[0].attacker;
             this.currentRound = rounds[0];
             this.deck = game.deck;
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (i >= 2)
+                {
+                    Height += 115;
+                    cardTable.Location = new Point(cardTable.Location.X, cardTable.Location.Y + 60);
+                    turnInRound.Location = new Point(turnInRound.Location.X, turnInRound.Location.Y + 60);
+                    bitoButton.Location = new Point(bitoButton.Location.X, bitoButton.Location.Y + 60);
+                    takeAllCards.Location = new Point(takeAllCards.Location.X, takeAllCards.Location.Y + 60);
+                }
+            }
+
             RefreshHands();
             RefreshTable();
+
+            backCard.Name = "backCard";
+            backCard.Height = 56;
+            backCard.Width = 80;
+            backCard.Location = new Point(787, 30);
+            backCard.SizeMode = PictureBoxSizeMode.StretchImage;
+            backCard.Image = cards["back"];
+            backCard.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            Controls.Add(backCard);
+            Controls.SetChildIndex(backCard, 1);
 
             // вывод козыря
             var trumpCard = game.trump;
             var trumpCardName = trumpCard.Suit + '_' + trumpCard.Rank;
-            PictureBox trump = new PictureBox();
             trump.Name = "trump";
             trump.Height = 80;
             trump.Width = 56;
-            trump.Location = new Point(850, 120);
+            trump.Location = new Point(800, 35);
             trump.SizeMode = PictureBoxSizeMode.StretchImage;
             trump.Tag = trumpCard.Suit + "_" + trumpCard.Rank;
             trump.Image = cards[trumpCardName];
             Controls.Add(trump);
 
-
-
+            deckCount.Name = "deckCount";
+            deckCount.Location = new Point(780, 5);
+            Controls.Add(deckCount);
+            Controls.SetChildIndex(deckCount, 0);
         }
         private void Card_Click(object sender, EventArgs e)
         {
@@ -151,18 +177,16 @@ namespace Durak
 
         private void turnInRound_Click(object sender, EventArgs e)
         {
-            // переход хода между аттакером и дефендером
             if (currentPlayer == currentRound.attacker)
             {
-                currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+                currentPlayer = currentRound.defender;                
             }
             else
             {
-                if (((players.IndexOf(currentPlayer) - 1) < 0)) currentPlayer = players[players.Count - 1];
-                else currentPlayer = players[(players.IndexOf(currentPlayer) - 1) % players.Count];
+                currentPlayer = currentRound.attacker;
             }
             RefreshHands();
-
+            RefreshTable();
             if (currentPlayer == currentRound.attacker)
             {
                 bitoButton.Enabled = true;
@@ -180,10 +204,40 @@ namespace Durak
         {
             if (currentPlayer == currentRound.attacker)
             {
+                if (currentRound.CardsPairs.Count == 0)
+                {
+                    turnInRound.Enabled = false;
+                    bitoButton.Enabled = false;
+                }
+                else
+                {
+                    foreach (var pair in currentRound.CardsPairs)
+                    {
+                        if (pair.Value == null)
+                        {
+                            turnInRound.Enabled = true;
+                        }
+                        else
+                        {
+                            turnInRound.Enabled = false;
+                        }
+                    }
+                }
                 takeAllCards.Enabled = false;
             }
             else
             {
+                foreach (var pair in currentRound.CardsPairs)
+                {
+                    if (pair.Value == null)
+                    {
+                        turnInRound.Enabled = false;
+                    }
+                    else
+                    {
+                        turnInRound.Enabled = true;
+                    }
+                }
                 takeAllCards.Enabled = true;
             }
 
@@ -212,13 +266,15 @@ namespace Durak
                 cardTable.Rows[0].Cells[i].Value = cards[cardNameKey];
                 cardTable.Rows[1].Cells[i].Value = cards[cardNameValue];                
             }
+            var deckC = deck.Cards.Count - 1;
+            deckCount.Text = "Карт осталось: " + deckC.ToString();
         }
 
         private void RefreshHands()
         {
             for (int ix = this.Controls.Count - 1; ix >= 0; ix--)
             {
-                if (this.Controls[ix].Name != "trump")
+                if (this.Controls[ix].Name != "trump" &&  this.Controls[ix].Name != "backCard")
                 {
                     if (this.Controls[ix] is PictureBox) this.Controls[ix].Dispose();
                 }
@@ -261,9 +317,7 @@ namespace Durak
                     Controls.Add(imageCard);
                     cardDistanseX += 60;
                 }
-                cardDistanseY += 120;
-                if (i >= 2)
-                Height += 115;
+                cardDistanseY += 120;                
             }
 
             foreach (PictureBox PictureCard in Controls.OfType<PictureBox>())
@@ -287,16 +341,28 @@ namespace Durak
             bitoCounter++;
             if (bitoCounter < players.Count - 1)
             {
-                currentPlayer = currentRound.PassTurn(players, players.IndexOf(currentPlayer));
+                currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+                if (currentPlayer != currentRound.defender)
+                {
+                    currentRound.attacker = currentPlayer;
+                }
+                else
+                {
+                    currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+                    currentRound.attacker = currentPlayer;
+                }
+                RefreshHands();
+                RefreshTable();
             }
             else
             {
+                currentPlayer = currentRound.defender;
                 var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
                 game.rounds.Add(round);
                 currentRound = round;
                 currentRound.DrawCardsAfterRound(players, deck);
                 RefreshHands();
-                RefreshTable();
+                RefreshTable();            
                 bitoCounter = 0;
             }
         }
@@ -311,19 +377,21 @@ namespace Durak
                 turnInRound.Location = new Point(turnInRound.Location.X + 56, turnInRound.Location.Y);
                 bitoButton.Location = new Point(bitoButton.Location.X + 56, bitoButton.Location.Y);
                 takeAllCards.Location = new Point(takeAllCards.Location.X + 56, takeAllCards.Location.Y);
+                trump.Location = new Point(trump.Location.X + 56, trump.Location.Y);
+                backCard.Location = new Point(backCard.Location.X + 56, backCard.Location.Y);
+                deckCount.Location = new Point(deckCount.Location.X + 56, deckCount.Location.Y);
                 if (card.Value != null)
                 {
                     currentPlayer.AddCardToHand(card.Value);
-                    Width += 56;
-                    cardTable.Location = new Point(cardTable.Location.X + 56, cardTable.Location.Y);
                 }
             }
-            RefreshHands();
+            currentPlayer = currentRound.PassTurn(players, players.IndexOf(currentPlayer));
 
             var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
             game.rounds.Add(round);
             currentRound = round;
             currentRound.DrawCardsAfterRound(players, deck);
+            RefreshHands();
             RefreshTable();
             bitoCounter = 0;
         }

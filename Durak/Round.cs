@@ -48,7 +48,6 @@ namespace Durak
                     matchingСards = true;
                 }
             }
-            Console.WriteLine(matchingСards);
             return matchingСards;
         }
 

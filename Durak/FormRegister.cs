@@ -39,7 +39,7 @@ namespace Durak
                 TextBox newTextBox = new TextBox();
                 // Устанавливаем размер и позицию нового TextBox
                 newTextBox.Location = new System.Drawing.Point(12, newTextBoxY);
-                newTextBox.Size = new System.Drawing.Size(173, 20);
+                newTextBox.Size = new System.Drawing.Size(253, 20);
                 // Добавляем новый TextBox на форму
                 Controls.Add(newTextBox);
 
@@ -47,12 +47,13 @@ namespace Durak
                 Height += newTextBox.Size.Height + 10;
 
                 // Размещаем кнопку addPlayer под последним добавленным TextBox
-                startGame.Location = new System.Drawing.Point(110, newTextBoxY + newTextBox.Size.Height + 10);
+                startGame.Location = new System.Drawing.Point(190, newTextBoxY + newTextBox.Size.Height + 10);
                 addPlayer.Location = new System.Drawing.Point(12, newTextBoxY + newTextBox.Size.Height + 10);
+                DeletePlayer.Location = new System.Drawing.Point(110, newTextBoxY + newTextBox.Size.Height + 10);
             }
             else
             {
-                MessageBox.Show("Нельзя добавить больше 6 TextBox.");
+                MessageBox.Show("В игре не может быть больше 6 игроков!");
             }
         }
 
@@ -75,6 +76,27 @@ namespace Durak
             formGame.ShowDialog();
 
             // Скрываем текущую
+        }
+
+        private void DeletePlayer_Click(object sender, EventArgs e)
+        {
+            if (this.Controls.OfType<TextBox>().Any())
+            {
+                if (this.Controls.OfType<TextBox>().Count() > 2)
+                {
+                    TextBox textBoxToRemove = this.Controls.OfType<TextBox>().Last();
+                    this.Controls.Remove(textBoxToRemove);
+                    textBoxToRemove.Dispose();
+                    Height -= 30;
+                    startGame.Location = new System.Drawing.Point(190, startGame.Location.Y - 30);
+                    addPlayer.Location = new System.Drawing.Point(12, addPlayer.Location.Y - 30);
+                    DeletePlayer.Location = new System.Drawing.Point(110, DeletePlayer.Location.Y - 30);
+                }
+                else
+                {
+                    MessageBox.Show("В игре не может быть меньше двух игроков!");
+                }
+            }
         }
     }
 }
