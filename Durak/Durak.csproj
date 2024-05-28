@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{51E03F8B-EB15-407F-8318-461A3995C46D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Durak</RootNamespace>
+    <AssemblyName>Durak</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Card.cs" />
+    <Compile Include="FormGame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormGame.Designer.cs">
+      <DependentUpon>FormGame.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Player.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="Round.cs" />
+    <Compile Include="Deck.cs" />
+    <Compile Include="FormRegister.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRegister.Designer.cs">
+      <DependentUpon>FormRegister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormGame.resx">
+      <DependentUpon>FormGame.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRegister.resx">
+      <DependentUpon>FormRegister.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="CardBacks\Thumbs.db" />
+    <None Include="CardPics\Thumbs.db" />
+    <None Include="CardSuits\Thumbs.db" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CardBacks\back.jpg" />
+    <Content Include="CardBacks\back_black.jpg" />
+    <Content Include="CardPics\Clubs_A.jpg" />
+    <Content Include="CardPics\Clubs_8.jpg" />
+    <Content Include="CardPics\Clubs_J.jpg" />
+    <Content Include="CardPics\Clubs_K.jpg" />
+    <Content Include="CardPics\Clubs_9.jpg" />
+    <Content Include="CardPics\Clubs_Q.jpg" />
+    <Content Include="CardPics\Clubs_7.jpg" />
+    <Content Include="CardPics\Clubs_6.jpg" />
+    <Content Include="CardPics\Clubs_10.jpg" />
+    <Content Include="CardPics\Diamonds_A.jpg" />
+    <Content Include="CardPics\Diamonds_8.jpg" />
+    <Content Include="CardPics\Diamonds_J.jpg" />
+    <Content Include="CardPics\Diamonds_K.jpg" />
+    <Content Include="CardPics\Diamonds_9.jpg" />
+    <Content Include="CardPics\Diamonds_Q.jpg" />
+    <Content Include="CardPics\Diamonds_7.jpg" />
+    <Content Include="CardPics\Diamonds_6.jpg" />
+    <Content Include="CardPics\Diamonds_10.jpg" />
+    <Content Include="CardPics\Hearts_A.jpg" />
+    <Content Include="CardPics\Hearts_8.jpg" />
+    <Content Include="CardPics\Hearts_J.jpg" />
+    <Content Include="CardPics\Hearts_K.jpg" />
+    <Content Include="CardPics\Hearts_9.jpg" />
+    <Content Include="CardPics\Hearts_Q.jpg" />
+    <Content Include="CardPics\Hearts_7.jpg" />
+    <Content Include="CardPics\Hearts_6.jpg" />
+    <Content Include="CardPics\Hearts_10.jpg" />
+    <Content Include="CardPics\Spades_A.jpg" />
+    <Content Include="CardPics\Spades_8.jpg" />
+    <Content Include="CardPics\Spades_J.jpg" />
+    <Content Include="CardPics\Spades_K.jpg" />
+    <Content Include="CardPics\Spades_9.jpg" />
+    <Content Include="CardPics\Spades_Q.jpg" />
+    <Content Include="CardPics\Spades_7.jpg" />
+    <Content Include="CardPics\Spades_6.jpg" />
+    <Content Include="CardPics\Spades_10.jpg" />
+    <Content Include="CardSuits\Clubs.gif" />
+    <Content Include="CardSuits\Diamonds.gif" />
+    <Content Include="CardSuits\Hearts.gif" />
+    <Content Include="CardSuits\Spides.gif" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
