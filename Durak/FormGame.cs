@@ -56,12 +56,14 @@ namespace Durak
             ["Diamonds"] = Properties.Resources.Diamonds,
             ["Hearts"] = Properties.Resources.Hearts,
             ["Spides"] = Properties.Resources.Spides,
+            ["Empty"] = Properties.Resources.Empty,
         };
         Game game = new Game();
         List<Player> players;
         List<Round> rounds;
         Player currentPlayer;
         Round currentRound;
+        Deck deck;
         public FormGame(List<TextBox> names)
         {    
             foreach (var name in names)
@@ -76,10 +78,165 @@ namespace Durak
             this.rounds = game.rounds;
             this.currentPlayer = rounds[0].attacker;
             this.currentRound = rounds[0];
+            this.deck = game.deck;
+            RefreshHands();
+            RefreshTable();
+
+            // вывод козыря
+            var trumpCard = game.trump;
+            var trumpCardName = trumpCard.Suit + '_' + trumpCard.Rank;
+            PictureBox trump = new PictureBox();
+            trump.Name = "trump";
+            trump.Height = 80;
+            trump.Width = 56;
+            trump.Location = new Point(850, 120);
+            trump.SizeMode = PictureBoxSizeMode.StretchImage;
+            trump.Tag = trumpCard.Suit + "_" + trumpCard.Rank;
+            trump.Image = cards[trumpCardName];
+            Controls.Add(trump);
+
+
+
+        }
+        private void Card_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("клик");
+            string pickedCard = (string)((PictureBox)sender).Tag;
+            Bitmap cardPicture = cards[pickedCard];
+            foreach (Card card in currentPlayer.Hand)
+            {
+                var cardName = card.Suit + '_' + card.Rank;
+                if (pickedCard == cardName) // Проверка на экземпляр карты
+                {                   
+                    if (currentPlayer == currentRound.attacker)
+                    {
+                        if (currentRound.CardsPairs.Count == 0)
+                        {
+                            currentRound.Play(currentPlayer, card);                            
+                            RefreshTable();
+                            break;
+                        }
+                        else
+                        {
+                            currentRound.MoveAttacker(currentPlayer, card);
+                            if (currentRound.CheckToss(card))
+                            {
+                                RefreshTable();
+                            }
+                            break;
+                        }
+                    }
+                    else if (currentPlayer == currentRound.defender)
+                    {
+                        var attackCard = currentRound.CardsPairs.Last().Key;
+                        foreach (var pair in currentRound.CardsPairs)
+                        {
+                            if (pair.Value == null)
+                            {
+                                attackCard = pair.Key;
+                                break;
+                            }
+                        }
+                        currentRound.MoveDefender(attackCard, card, game.trump);
+                        if (currentRound.CheckHit(attackCard, card, game.trump))
+                        {
+                            RefreshTable();
+                        }
+                        break;
+                    }
+                }
+            }            
+        }
+
+        private void newRoundButton_Click(object sender, EventArgs e)
+        {
+            currentPlayer = game.rounds[0].PassTurn(players, players.IndexOf(currentPlayer));
+            var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
+            game.rounds.Add(round);
+            currentRound = round;           
+            currentRound.DrawCardsAfterRound(players, deck);
+            RefreshHands();
+            RefreshTable();
+        }
+
+        private void turnInRound_Click(object sender, EventArgs e)
+        {
+            // переход хода между аттакером и дефендером
+            if (currentPlayer == game.rounds[0].attacker)
+            {
+                currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+            }
+            else
+            {
+                if (((players.IndexOf(currentPlayer) - 1) < 0)) currentPlayer = players[players.Count - 1];
+                else currentPlayer = players[(players.IndexOf(currentPlayer) - 1) % players.Count];
+            }
+            RefreshHands();
+
+            if (currentPlayer == currentRound.attacker)
+            {
+                bitoButton.Enabled = true;
+                takeAllCards.Enabled = false;
+            }
+            else
+            {
+                bitoButton.Enabled = false;
+                takeAllCards.Enabled = true;
+            }
+        }
+
+        private void RefreshTable()
+        {
+            if (currentPlayer == currentRound.attacker)
+            {
+                takeAllCards.Enabled = false;
+            }
+            else
+            {
+                takeAllCards.Enabled = true;
+            }
+
+            cardTable.Rows.Clear();
+
+            while (cardTable.RowCount < 2)
+            {
+                cardTable.Rows.Add(cards["Empty"], cards["Empty"], cards["Empty"], cards["Empty"], cards["Empty"], cards["Empty"]);
+            }
+
+            var cardNameKey = "";
+            var cardNameValue = "";
+
+            for (int i = 0; i < currentRound.CardsPairs.Count; i++)
+            {
+                var card = currentRound.CardsPairs.ElementAt(i);
+                cardNameKey = card.Key.Suit + '_' + card.Key.Rank;
+                if (card.Value != null)
+                {
+                    cardNameValue = card.Value.Suit + '_' + card.Value.Rank;
+                }
+                else
+                {
+                    cardNameValue = "Empty";
+                }
+                cardTable.Rows[0].Cells[i].Value = cards[cardNameKey];
+                cardTable.Rows[1].Cells[i].Value = cards[cardNameValue];                
+            }
+        }
+
+        private void RefreshHands()
+        {
+            for (int ix = this.Controls.Count - 1; ix >= 0; ix--)
+            {
+                if (this.Controls[ix].Name != "trump")
+                {
+                    if (this.Controls[ix] is PictureBox) this.Controls[ix].Dispose();
+                }
+            }
+
             // Вывод рук игроков
             var cardDistanseX = 0;
             for (int i = 0; i < players.Count; i++)
-            {                
+            {
                 switch (i)
                 {
                     case 0:
@@ -99,9 +256,14 @@ namespace Durak
                 }
                 foreach (Card card in players[i].Hand)
                 {
+
                     if (players[i] == currentPlayer)
                     {
                         card.Visible = true;
+                    }
+                    else
+                    {
+                        card.Visible = false;
                     }
                     var cardName = card.Suit + '_' + card.Rank;
                     PictureBox imageCard = new PictureBox();
@@ -127,24 +289,11 @@ namespace Durak
                     }
                     Controls.Add(imageCard);
                     cardDistanseX += 60;
-                }              
+                }
             }
-            // вывод козыря
-            var trumpCard = game.trump;
-            var trumpCardName = trumpCard.Suit + '_' + trumpCard.Rank;
-            PictureBox trump = new PictureBox();
-            trump.Height = 80;
-            trump.Width = 56;
-            trump.Location = new Point(850, 120);
-            trump.SizeMode = PictureBoxSizeMode.StretchImage;
-            trump.Tag = trumpCard.Suit + "_" + trumpCard.Rank;
-            trump.Image = cards[trumpCardName];
-            Controls.Add(trump);
-
 
             foreach (PictureBox PictureCard in Controls.OfType<PictureBox>())
             {
-                Console.WriteLine("1");
                 foreach (Card card in currentPlayer.Hand)
                 {
                     var cardName = card.Suit + '_' + card.Rank;
@@ -153,67 +302,20 @@ namespace Durak
                         if (card != game.trump && card.Visible)
                         {
                             PictureCard.Click += Card_Click;
-                            Console.WriteLine("gfsd");
                         }
-                    }
-                }                   
-            }
-        }
-        private void Card_Click(object sender, EventArgs e)
-        {
-            Console.WriteLine("1");
-            string pickedCard = (string)((PictureBox)sender).Tag;
-            Bitmap cardPicture = cards[pickedCard];
-            foreach (Card card in currentPlayer.Hand)
-            {
-                var cardName = card.Suit + '_' + card.Rank;
-                if (pickedCard == cardName) // Проверка на экземпляр карты
-                {                   
-                    if (currentPlayer == currentRound.attacker)
-                    {
-                        if (currentRound.CardsPairs.Count == 0)
-                        {
-                            currentRound.Play(currentPlayer, card);
-                            break;
-                        }
-                        else
-                        {
-                            currentRound.MoveAttacker(currentPlayer, card);
-                            break;
-                        }
-                    }
-                    else if (currentPlayer == currentRound.defender)
-                    {
-                        var attackCard = currentRound.CardsPairs.Last().Key;
-                        currentRound.MoveDefender(attackCard, card, game.trump);
-                        break;
                     }
                 }
-            }            
+            }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void bitoButton_Click(object sender, EventArgs e)
         {
-            currentPlayer = game.rounds[0].PassTurn(players, players.IndexOf(currentPlayer));
-            var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
-            game.rounds.Add(round);
-            currentRound = round;
-            Console.WriteLine(round.attacker.Name);
+            
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void takeAllCards_Click(object sender, EventArgs e)
         {
-            // переход хода между аттакером и дефендером
-            Console.WriteLine(currentPlayer.Name);
-            if (currentPlayer == game.rounds[0].attacker)
-            {
-                currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
-            }
-            else
-            {
-                currentPlayer = players[(players.IndexOf(currentPlayer) - 1) % players.Count];
-            }
-            Console.WriteLine(currentPlayer.Name);
+
         }
     }
 }

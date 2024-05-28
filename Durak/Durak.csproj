@@ -121,6 +121,7 @@
     <Content Include="CardPics\Diamonds_7.jpg" />
     <Content Include="CardPics\Diamonds_6.jpg" />
     <Content Include="CardPics\Diamonds_10.jpg" />
+    <None Include="CardPics\Empty.jpg" />
     <Content Include="CardPics\Hearts_A.jpg" />
     <Content Include="CardPics\Hearts_8.jpg" />
     <Content Include="CardPics\Hearts_J.jpg" />

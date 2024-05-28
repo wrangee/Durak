@@ -10,7 +10,7 @@ namespace Durak
 {
     internal class Game
     {
-        private Deck deck;
+        public Deck deck;
         public List<Player> players;
         public List<Round> rounds;
         public Card trump;

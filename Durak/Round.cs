@@ -28,7 +28,7 @@ namespace Durak
 
         public bool CheckHit(Card attackCard, Card defenseCard, Card trump)
         {
-            if ((attackCard.GetCardValue(attackCard.Rank) < defenseCard.GetCardValue(attackCard.Rank) && attackCard.Suit == defenseCard.Suit) || (defenseCard.Suit == trump.Suit && attackCard.Suit != trump.Suit))
+            if (((attackCard.GetCardValue(attackCard.Rank) < defenseCard.GetCardValue(defenseCard.Rank) && attackCard.Suit == defenseCard.Suit)) || (defenseCard.Suit == trump.Suit && attackCard.Suit != trump.Suit))
             {
                 return true;
             }
@@ -42,12 +42,13 @@ namespace Durak
         {
             bool matchingСards = false;
             foreach (var pair in CardsPairs)
-            {
-                if (attackCard.GetCardValue(attackCard.Rank) == pair.Key.GetCardValue(attackCard.Rank) || attackCard.GetCardValue(attackCard.Rank) == pair.Value.GetCardValue(attackCard.Rank))
+            {               
+                if (attackCard.GetCardValue(attackCard.Rank) == pair.Key.GetCardValue(pair.Key.Rank) || (pair.Value != null && attackCard.GetCardValue(attackCard.Rank) == pair.Value.GetCardValue(pair.Value.Rank)))
                 {
-                    matchingСards |= true;              
+                    matchingСards = true;
                 }
             }
+            Console.WriteLine(matchingСards);
             return matchingСards;
         }
 
@@ -62,9 +63,9 @@ namespace Durak
         public void MoveDefender(Card attackCard, Card defenseCard, Card trump)
         {
             if (CheckHit(attackCard, defenseCard, trump))
-            {
+            {                
                 CardsPairs.Remove(attackCard);
-                AddCardPair(attackCard, attacker.Hit(defenseCard));
+                AddCardPair(attackCard, defender.Hit(defenseCard));
             }
         }
 

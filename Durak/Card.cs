@@ -21,6 +21,7 @@ namespace Durak
 
         public int GetCardValue(string rank)
         {
+            Console.WriteLine(rank);
             if (int.TryParse(rank, out int value))
             {
                 return value;  // для числовых рангов, например "6", "7", "8"
