@@ -63,13 +63,14 @@ namespace Durak
         {
             if (CheckHit(attackCard, defenseCard, trump))
             {
+                CardsPairs.Remove(attackCard);
                 AddCardPair(attackCard, attacker.Hit(defenseCard));
             }
         }
 
-        public void Play()
+        public void Play(Player attacker, Card attackCard)
         {
-            // описание
+            AddCardPair(attacker.MakeMove(attackCard), null);
         }
 
         public void DrawCardsAfterRound(List<Player> players, Deck deck)

@@ -58,25 +58,37 @@ namespace Durak
             ["Spides"] = Properties.Resources.Spides,
         };
         Game game = new Game();
-        int u = 1;
-        private Point mouseOffset;
-        private bool isDragging = false;
-        private PictureBox draggedCard;
-
+        List<Player> players;
+        List<Round> rounds;
+        Player currentPlayer;
+        Round currentRound;
         public FormGame(List<TextBox> names)
         {    
             foreach (var name in names)
             {
+                Console.WriteLine(name);
                 game.AddPlayer(name.Text);
             }
             InitializeComponent();
             game.DealCards();
-            List<Player> players = game.players;
-
+            this.players = game.players;
+            game.StartGame();
+            this.rounds = game.rounds;
+            this.currentPlayer = rounds[0].attacker;
+            this.currentRound = rounds[0];
             // Вывод рук игроков
             var cardDistanseX = 0;
             for (int i = 0; i < players.Count; i++)
-            {
+            {                
+                switch (i)
+                {
+                    case 0:
+                        label1.Text = players[i].Name;
+                        break;
+                    case 1:
+                        label2.Text = players[i].Name;
+                        break;
+                }
                 if (i != 0 && i != 3)
                 {
                     cardDistanseX += 30;
@@ -87,6 +99,10 @@ namespace Durak
                 }
                 foreach (Card card in players[i].Hand)
                 {
+                    if (players[i] == currentPlayer)
+                    {
+                        card.Visible = true;
+                    }
                     var cardName = card.Suit + '_' + card.Rank;
                     PictureBox imageCard = new PictureBox();
                     imageCard.Height = 80;
@@ -126,53 +142,78 @@ namespace Durak
             Controls.Add(trump);
 
 
-            foreach (PictureBox card in Controls.OfType<PictureBox>())
+            foreach (PictureBox PictureCard in Controls.OfType<PictureBox>())
             {
-                if (card != trump &&  !card.Visible)
-                {                    
-                    card.MouseDown += Card_MouseDown;                   
-                    card.MouseMove += Card_MouseMove;
-                    card.AllowDrop = true;
+                Console.WriteLine("1");
+                foreach (Card card in currentPlayer.Hand)
+                {
+                    var cardName = card.Suit + '_' + card.Rank;
+                    if ((string)PictureCard.Tag == cardName) // Проверка на экземпляр карты
+                    {
+                        if (card != game.trump && card.Visible)
+                        {
+                            PictureCard.Click += Card_Click;
+                            Console.WriteLine("gfsd");
+                        }
+                    }
+                }                   
+            }
+        }
+        private void Card_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("1");
+            string pickedCard = (string)((PictureBox)sender).Tag;
+            Bitmap cardPicture = cards[pickedCard];
+            foreach (Card card in currentPlayer.Hand)
+            {
+                var cardName = card.Suit + '_' + card.Rank;
+                if (pickedCard == cardName) // Проверка на экземпляр карты
+                {                   
+                    if (currentPlayer == currentRound.attacker)
+                    {
+                        if (currentRound.CardsPairs.Count == 0)
+                        {
+                            currentRound.Play(currentPlayer, card);
+                            break;
+                        }
+                        else
+                        {
+                            currentRound.MoveAttacker(currentPlayer, card);
+                            break;
+                        }
+                    }
+                    else if (currentPlayer == currentRound.defender)
+                    {
+                        var attackCard = currentRound.CardsPairs.Last().Key;
+                        currentRound.MoveDefender(attackCard, card, game.trump);
+                        break;
+                    }
                 }
-            }
+            }            
         }
-        private void Card_MouseDown(object sender, MouseEventArgs e)
+
+        private void button1_Click(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            currentPlayer = game.rounds[0].PassTurn(players, players.IndexOf(currentPlayer));
+            var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
+            game.rounds.Add(round);
+            currentRound = round;
+            Console.WriteLine(round.attacker.Name);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // переход хода между аттакером и дефендером
+            Console.WriteLine(currentPlayer.Name);
+            if (currentPlayer == game.rounds[0].attacker)
             {
-                PictureBox pictureBox = (PictureBox)sender;
-                pictureBox.DoDragDrop(pictureBox.Image, DragDropEffects.Move);
+                currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
             }
-        }
-
-        private void Card_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
+            else
             {
-                PictureBox pictureBox = (PictureBox)sender;
-                pictureBox.DoDragDrop(pictureBox.Image, DragDropEffects.Move);
+                currentPlayer = players[(players.IndexOf(currentPlayer) - 1) % players.Count];
             }
-        }
-
-
-        private void FormGame_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Environment.Exit(0);
-        }
-
-        private void tableLayoutPanel1_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.Bitmap))
-            {
-                e.Effect = DragDropEffects.Move;
-            }
-        }
-
-        private void tableLayoutPanel1_DragDrop(object sender, DragEventArgs e)
-        {
-            PictureBox pictureBox = new PictureBox();
-            pictureBox.Image = (Image)e.Data.GetData(DataFormats.Bitmap);
-            ((TableLayoutPanel)sender).Controls.Add(pictureBox);
+            Console.WriteLine(currentPlayer.Name);
         }
     }
 }

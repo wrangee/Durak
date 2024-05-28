@@ -31,7 +31,7 @@ namespace Durak
         public void DealCards() // раздача карт
         {
             int numCardsToDeal = 6;
-
+            Card trump = deck.Cards[deck.Cards.Count - 1];
             foreach (var player in players)
             {
                 for (int i = 0; i < numCardsToDeal; i++)
@@ -40,6 +40,7 @@ namespace Durak
                     player.AddCardToHand(card);
                 }
             }
+            deck.Cards.Add(trump);
         }
 
         public Player DetermineWinner()
@@ -61,7 +62,7 @@ namespace Durak
             // Определение козыря
             Random random = new Random();
             int randomIndex = random.Next(players.Count);
-            var round = new Round(players[randomIndex], players[randomIndex + 1], deck.Cards[0]);
+            var round = new Round(players[randomIndex], players[(randomIndex + 1) % players.Count], deck.Cards[deck.Cards.Count - 1]);
             rounds.Add(round);
         }
 

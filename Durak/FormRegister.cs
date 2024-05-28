@@ -69,10 +69,7 @@ namespace Durak
             FormGame formGame = new FormGame(players);
 
             // Передаем значения из TextBox в FormGame
-            foreach (var tb in Controls.OfType<TextBox>())
-            {
-                //formGame.PlayerNames.Add(tb.Text);
-            }
+
             this.Hide();
             // Открываем новую форму FormGame
             formGame.ShowDialog();
