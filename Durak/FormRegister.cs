@@ -71,7 +71,7 @@ namespace Durak
 
             // Передаем значения из TextBox в FormGame
 
-            this.Hide();
+            //this.Hide();
             // Открываем новую форму FormGame
             formGame.ShowDialog();
 

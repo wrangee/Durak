@@ -208,11 +208,12 @@ namespace Durak
                     bitoButton.Enabled = false;
                     takeAllCards.Enabled = true;
                 }
-            } 
+            }
+            game.EndGame();
             if (players.Count == 1)
             {
                 durak = players[0];
-                MessageBox.Show("Победа присуждается игроку: " + winner.Name + "\n" + "Дураком становистя: " + durak.Name);
+                MessageBox.Show("Победа присуждается игроку: " + winner.Name + "\n" + "Дураком становится: " + durak.Name);
             }
 
             RefreshHands();
@@ -465,14 +466,14 @@ namespace Durak
             Console.WriteLine(maxCardsPlayers);
             if (maxCardsPlayers > 5)
             {
-                cardTable.Location = new Point(413 + (maxCardsPlayers - 6) * 56, cardTable.Location.Y);
-                Width = 937 + (maxCardsPlayers - 6) * 56;
-                turnInRound.Location = new Point(413 + (maxCardsPlayers - 6) * 56, turnInRound.Location.Y);
-                bitoButton.Location = new Point(585 + (maxCardsPlayers - 6) * 56, bitoButton.Location.Y);
-                takeAllCards.Location = new Point(684 + (maxCardsPlayers - 6) * 56, takeAllCards.Location.Y);
-                trump.Location = new Point(800 + (maxCardsPlayers - 6) * 56, trump.Location.Y);
-                backCard.Location = new Point(787 + (maxCardsPlayers - 6) * 56, backCard.Location.Y);
-                deckCount.Location = new Point(780 + (maxCardsPlayers - 6) * 56, deckCount.Location.Y);
+                cardTable.Location = new Point(413 + (maxCardsPlayers - 6) * 60, cardTable.Location.Y);
+                Width = 937 + (maxCardsPlayers - 6) * 60;
+                turnInRound.Location = new Point(413 + (maxCardsPlayers - 6) * 60, turnInRound.Location.Y);
+                bitoButton.Location = new Point(585 + (maxCardsPlayers - 6) * 60, bitoButton.Location.Y);
+                takeAllCards.Location = new Point(684 + (maxCardsPlayers - 6) * 60, takeAllCards.Location.Y);
+                trump.Location = new Point(800 + (maxCardsPlayers - 6) * 60, trump.Location.Y);
+                backCard.Location = new Point(787 + (maxCardsPlayers - 6) * 60, backCard.Location.Y);
+                deckCount.Location = new Point(780 + (maxCardsPlayers - 6) * 60, deckCount.Location.Y);
             }
         }
 
