@@ -24,7 +24,10 @@ namespace Durak
 
         public void AddCardPair(Card attackCard, Card defenseCard)
         {
-            CardsPairs.Add(attackCard, defenseCard);
+            if (CardsPairs.Count < 6)
+            {
+                CardsPairs.Add(attackCard, defenseCard);
+            }
         }
 
         public bool CheckHit(Card attackCard, Card defenseCard, Card trump)

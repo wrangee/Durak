@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -70,6 +71,7 @@ namespace Durak
         Label deckCount = new Label();
         Player winner;
         Player durak;
+        bool isFirstTake = true;
         public FormGame(List<TextBox> names)
         {    
             foreach (var name in names)
@@ -147,11 +149,25 @@ namespace Durak
                         {
                             if (currentRound.defender.Hand.Count != 0)
                             {
-                                currentRound.MoveAttacker(currentPlayer, card);
-                                if (currentRound.CheckToss(card))
+                                var pairCount = 0;
+                                foreach (var pair in currentRound.CardsPairs)
                                 {
-                                    RefreshTable();
+                                    if (pair.Value == null)
+                                    {
+                                        pairCount++;
+                                    }
                                 }
+                                if (currentRound.defender.Hand.Count >= pairCount)
+                                {
+                                    if (currentRound.CardsPairs.Count < 6)
+                                    {
+                                        currentRound.MoveAttacker(currentPlayer, card);
+                                        if (currentRound.CheckToss(card))
+                                        {
+                                            RefreshTable();
+                                        }
+                                    }
+                                }                                
                                 break;
                             }
                         }
@@ -164,18 +180,18 @@ namespace Durak
                             if (pair.Value == null)
                             {
                                 attackCard = pair.Key;
+                                currentRound.MoveDefender(attackCard, card, game.trump);
+                                if (currentRound.CheckHit(attackCard, card, game.trump))
+                                {
+                                    RefreshTable();
+                                }
                                 break;
                             }
-                        }
-                        currentRound.MoveDefender(attackCard, card, game.trump);
-                        if (currentRound.CheckHit(attackCard, card, game.trump))
-                        {
-                            RefreshTable();
                         }
                         break;
                     }
                 }
-            }
+            }           
 
             if (currentPlayer.Hand.Count == 0)
             {
@@ -186,37 +202,60 @@ namespace Durak
                 }
                 if (currentPlayer == currentRound.defender)
                 {
-                    currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
-
-                    var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
-                    game.rounds.Add(round);
-                    currentRound = round;
-                    if (deck.Cards.Count > 0)
+                    if (players.Count != 0)
                     {
-                        currentRound.DrawCardsAfterRound(players, deck);
+                        currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+                        var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
+                        game.rounds.Add(round);
+                        currentRound = round;
+                        if (deck.Cards.Count > 0)
+                        {
+                            currentRound.DrawCardsAfterRound(players, deck);
+                        }
+                        RefreshHands();
+                        RefreshTable();
+                        bitoCounter = 0;
+                    }
+                }
+                else if (currentPlayer == currentRound.attacker) //<--
+                {
+                    currentPlayer = currentRound.defender;
+                    if (players.Count != 1)
+                    {
+                        currentRound.attacker = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
                     }
                     RefreshHands();
                     RefreshTable();
-                    bitoCounter = 0;
-                }
-                if (currentPlayer == currentRound.attacker)
-                {
-                    currentPlayer = currentRound.defender;
-                    currentRound.attacker = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
-                    RefreshHands();
-                    RefreshTable();
-                    bitoButton.Enabled = false;
+                    if (isFirstTake)
+                    {
+                        bitoButton.Enabled = false;
+                    }
+                    else
+                    {
+                        bitoButton.Enabled = true;
+                    }
                     takeAllCards.Enabled = true;
                 }
-            }
-            game.EndGame();
+            }           
+            RefreshHands();
+
             if (players.Count == 1)
             {
-                durak = players[0];
-                MessageBox.Show("Победа присуждается игроку: " + winner.Name + "\n" + "Дураком становится: " + durak.Name);
+                if (currentPlayer == currentRound.defender)
+                {
+                    if (currentPlayer.Hand.Count > currentRound.CardsPairs.Count)
+                    {
+                        durak = players[0];
+                        MessageBox.Show("Победа присуждается игроку: " + winner.Name + "\n" + "Дураком становится: " + durak.Name);
+                        this.Visible = false;
+                    }
+                }
             }
-
-            RefreshHands();
+            if (players.Count == 0)
+            {
+                MessageBox.Show("Ничья!");
+                this.Visible = false;
+            }
         }
 
         private void turnInRound_Click(object sender, EventArgs e)
@@ -259,8 +298,16 @@ namespace Durak
                     {
                         if (pair.Value == null)
                         {
-                            turnInRound.Enabled = true;
-                            bitoButton.Enabled = false; // <-
+                            if (isFirstTake)
+                            {
+                                turnInRound.Enabled = true;
+                                bitoButton.Enabled = false;
+                            }
+                            else
+                            {
+                                turnInRound.Enabled = false;
+                                bitoButton.Enabled = true;
+                            } // <-
                         }
                         else
                         {
@@ -285,6 +332,7 @@ namespace Durak
                     }
                 }
                 takeAllCards.Enabled = true;
+                bitoButton.Enabled = false; // ??????
             }
 
             cardTable.Rows.Clear();
@@ -395,8 +443,20 @@ namespace Durak
 
         private void bitoButton_Click(object sender, EventArgs e)
         {
+            int playersCountForCompare;
             bitoCounter++;
-            if (bitoCounter < players.Count - 1)
+            Console.WriteLine("бито" + bitoCounter);
+            
+            if (isFirstTake)
+            {
+                playersCountForCompare = players.Count - 1; // ??????????
+            }
+            else
+            {
+                playersCountForCompare = players.Count - 1;
+            }
+            Console.WriteLine("кол-во игроков" + playersCountForCompare);
+            if (bitoCounter < playersCountForCompare)
             {
                 currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
                 if (currentPlayer != currentRound.defender)
@@ -414,13 +474,36 @@ namespace Durak
             else
             {
                 currentPlayer = currentRound.defender;
-
-                var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
-                game.rounds.Add(round);
-                currentRound = round;
-                if (deck.Cards.Count > 0)
+                if (isFirstTake)
                 {
-                    currentRound.DrawCardsAfterRound(players, deck);
+                    var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
+                    game.rounds.Add(round);
+                    currentRound = round;
+                    if (deck.Cards.Count > 0)
+                    {
+                        currentRound.DrawCardsAfterRound(players, deck);
+                    }
+                }
+                else
+                {
+                    foreach (var card in currentRound.CardsPairs)
+                    {
+                        currentPlayer.AddCardToHand(card.Key);
+                        if (card.Value != null)
+                        {
+                            currentPlayer.AddCardToHand(card.Value);
+                        }
+                    }
+                    currentPlayer = currentRound.PassTurn(players, players.IndexOf(currentPlayer));
+
+                    var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
+                    game.rounds.Add(round);
+                    currentRound = round;
+                    if (deck.Cards.Count > 0)
+                    {
+                        currentRound.DrawCardsAfterRound(players, deck);
+                    }
+                    isFirstTake = true;
                 }
                 RefreshHands();
                 RefreshTable();
@@ -429,7 +512,26 @@ namespace Durak
         }
 
         private void takeAllCards_Click(object sender, EventArgs e)
-        {
+        {   
+            if (isFirstTake)
+            {
+                currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+                if (currentPlayer != currentRound.defender)
+                {
+                    currentRound.attacker = currentPlayer;
+                }
+                else
+                {
+                    currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+                    currentRound.attacker = currentPlayer;
+                }
+                RefreshHands();
+                RefreshTable();
+                bitoButton.Enabled = true;
+                turnInRound.Enabled = false;
+                isFirstTake = false;
+            }
+            /*
             foreach (var card in currentRound.CardsPairs)
             {
                 currentPlayer.AddCardToHand(card.Key);               
@@ -450,7 +552,7 @@ namespace Durak
             }
             RefreshHands();
             RefreshTable();
-            bitoCounter = 0;
+            bitoCounter = 0; */
         }
 
         private void UpdateLenElements()
@@ -475,11 +577,6 @@ namespace Durak
                 backCard.Location = new Point(787 + (maxCardsPlayers - 6) * 60, backCard.Location.Y);
                 deckCount.Location = new Point(780 + (maxCardsPlayers - 6) * 60, deckCount.Location.Y);
             }
-        }
-
-        private Player NextPlayer(List<Player> players, Player player)
-        {
-            return players[(players.IndexOf(currentPlayer) + 1) % players.Count];
         }
     }
 }
