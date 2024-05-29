@@ -40,7 +40,7 @@ namespace Durak
                     player.AddCardToHand(card);
                 }
             }
-            deck.Cards.Add(trump);
+            //deck.Cards.Add(trump);
         }
 
         public Player DetermineWinner()
@@ -62,7 +62,7 @@ namespace Durak
             // Определение козыря
             Random random = new Random();
             int randomIndex = random.Next(players.Count);
-            var round = new Round(players[randomIndex], players[(randomIndex + 1) % players.Count], deck.Cards[deck.Cards.Count - 1]);
+            var round = new Round(players[randomIndex], players[(randomIndex + 1) % players.Count], trump);
             rounds.Add(round);
         }
 

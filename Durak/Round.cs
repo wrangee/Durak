@@ -28,7 +28,7 @@ namespace Durak
 
         public bool CheckHit(Card attackCard, Card defenseCard, Card trump)
         {
-            if (((attackCard.GetCardValue(attackCard.Rank) < defenseCard.GetCardValue(defenseCard.Rank) && attackCard.Suit == defenseCard.Suit)) || (defenseCard.Suit == trump.Suit && attackCard.Suit != trump.Suit))
+            if ((attackCard.GetCardValue(attackCard.Rank) < defenseCard.GetCardValue(defenseCard.Rank) && attackCard.Suit == defenseCard.Suit) || (defenseCard.Suit == trump.Suit && attackCard.Suit != trump.Suit))
             {
                 return true;
             }

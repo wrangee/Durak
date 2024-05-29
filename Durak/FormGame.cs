@@ -145,12 +145,15 @@ namespace Durak
                         }
                         else
                         {
-                            currentRound.MoveAttacker(currentPlayer, card);
-                            if (currentRound.CheckToss(card))
+                            if (currentRound.defender.Hand.Count != 0)
                             {
-                                RefreshTable();
+                                currentRound.MoveAttacker(currentPlayer, card);
+                                if (currentRound.CheckToss(card))
+                                {
+                                    RefreshTable();
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                     else if (currentPlayer == currentRound.defender)
@@ -173,6 +176,20 @@ namespace Durak
                     }
                 }
             }
+            if (winner == null)
+            {
+                if (currentPlayer.Hand.Count == 0)
+                {
+                    players.Remove(currentPlayer);
+                    winner = currentPlayer;
+                }
+            }
+            if (players.Count == 1)
+            {
+                durak = players[0];
+                MessageBox.Show("Победа присуждается игроку: " + winner.Name + "\n" + "Дураком становистя: " + durak.Name);
+            }
+
             RefreshHands();
         }
 
@@ -180,7 +197,7 @@ namespace Durak
         {
             if (currentPlayer == currentRound.attacker)
             {
-                currentPlayer = currentRound.defender;                
+                currentPlayer = currentRound.defender;
             }
             else
             {
@@ -270,19 +287,10 @@ namespace Durak
                 cardTable.Rows[1].Cells[i].Value = cards[cardNameValue];                
             }
 
-            var deckC = deck.Cards.Count - 1;
+            var deckC = deck.Cards.Count;
             deckCount.Text = "Карт осталось: " + deckC.ToString();
 
             UpdateLenElements();
-
-            if (winner == null)
-            {
-                winner = game.DetermineWinner();
-            }
-            else
-            {
-                //durak  //- ? ничья???
-            }
         }
 
         private void RefreshHands()
@@ -292,6 +300,14 @@ namespace Durak
                 if (this.Controls[ix].Name != "trump" &&  this.Controls[ix].Name != "backCard")
                 {
                     if (this.Controls[ix] is PictureBox) this.Controls[ix].Dispose();
+                }
+            }
+
+            for (int ix = this.Controls.Count - 1; ix >= 0; ix--)
+            {
+                if (this.Controls[ix].Name != "deckCount")
+                {
+                    if (this.Controls[ix] is Label) this.Controls[ix].Dispose();
                 }
             }
 
@@ -342,7 +358,7 @@ namespace Durak
                     var cardName = card.Suit + '_' + card.Rank;
                     if ((string)PictureCard.Tag == cardName) // Проверка на экземпляр карты
                     {
-                        if (card != game.trump && card.Visible)
+                        if (PictureCard.Name != "trump" && card.Visible)
                         {
                             PictureCard.Click += Card_Click;
                         }
@@ -372,10 +388,14 @@ namespace Durak
             else
             {
                 currentPlayer = currentRound.defender;
+
                 var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
                 game.rounds.Add(round);
                 currentRound = round;
-                currentRound.DrawCardsAfterRound(players, deck);
+                if (deck.Cards.Count > 0)
+                {
+                    currentRound.DrawCardsAfterRound(players, deck);
+                }
                 RefreshHands();
                 RefreshTable();
                 bitoCounter = 0;
@@ -398,7 +418,10 @@ namespace Durak
             var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
             game.rounds.Add(round);
             currentRound = round;
-            currentRound.DrawCardsAfterRound(players, deck);
+            if (deck.Cards.Count > 0)
+            {
+                currentRound.DrawCardsAfterRound(players, deck);
+            }
             RefreshHands();
             RefreshTable();
             bitoCounter = 0;
@@ -426,6 +449,11 @@ namespace Durak
                 backCard.Location = new Point(787 + (maxCardsPlayers - 6) * 56, backCard.Location.Y);
                 deckCount.Location = new Point(780 + (maxCardsPlayers - 6) * 56, deckCount.Location.Y);
             }
+        }
+
+        private Player NextPlayer(List<Player> players, Player player)
+        {
+            return players[(players.IndexOf(currentPlayer) + 1) % players.Count];
         }
     }
 }
