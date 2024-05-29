@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace Durak
 {
@@ -84,8 +85,11 @@ namespace Durak
                     int cardsNeeded = cardsToDraw - player.Hand.Count;
                     for (int i = 0; i < cardsNeeded; i++)
                     {
-                        Card drawnCard = deck.Deal();
-                        player.AddCardToHand(drawnCard);
+                        if (deck.Cards.Count > 0)
+                        {
+                            Card drawnCard = deck.Deal();
+                            player.AddCardToHand(drawnCard);
+                        }
                     }
                 }
             }

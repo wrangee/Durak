@@ -208,8 +208,7 @@ namespace Durak
                     bitoButton.Enabled = false;
                     takeAllCards.Enabled = true;
                 }
-            }
-
+            } 
             if (players.Count == 1)
             {
                 durak = players[0];
