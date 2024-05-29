@@ -176,14 +176,40 @@ namespace Durak
                     }
                 }
             }
-            if (winner == null)
+
+            if (currentPlayer.Hand.Count == 0)
             {
-                if (currentPlayer.Hand.Count == 0)
+                players.Remove(currentPlayer);
+                if (winner == null)
                 {
-                    players.Remove(currentPlayer);
                     winner = currentPlayer;
                 }
+                if (currentPlayer == currentRound.defender)
+                {
+                    currentPlayer = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+
+                    var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
+                    game.rounds.Add(round);
+                    currentRound = round;
+                    if (deck.Cards.Count > 0)
+                    {
+                        currentRound.DrawCardsAfterRound(players, deck);
+                    }
+                    RefreshHands();
+                    RefreshTable();
+                    bitoCounter = 0;
+                }
+                if (currentPlayer == currentRound.attacker)
+                {
+                    currentPlayer = currentRound.defender;
+                    currentRound.attacker = players[(players.IndexOf(currentPlayer) + 1) % players.Count];
+                    RefreshHands();
+                    RefreshTable();
+                    bitoButton.Enabled = false;
+                    takeAllCards.Enabled = true;
+                }
             }
+
             if (players.Count == 1)
             {
                 durak = players[0];
