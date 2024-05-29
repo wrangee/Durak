@@ -72,7 +72,6 @@ namespace Durak
         {    
             foreach (var name in names)
             {
-                Console.WriteLine(name);
                 game.AddPlayer(name.Text);
             }
             InitializeComponent();
@@ -266,8 +265,11 @@ namespace Durak
                 cardTable.Rows[0].Cells[i].Value = cards[cardNameKey];
                 cardTable.Rows[1].Cells[i].Value = cards[cardNameValue];                
             }
+
             var deckC = deck.Cards.Count - 1;
             deckCount.Text = "Карт осталось: " + deckC.ToString();
+
+            UpdateLenElements();
         }
 
         private void RefreshHands()
@@ -371,20 +373,13 @@ namespace Durak
         {
             foreach (var card in currentRound.CardsPairs)
             {
-                currentPlayer.AddCardToHand(card.Key);
-                Width += 56;
-                cardTable.Location = new Point(cardTable.Location.X + 56, cardTable.Location.Y);
-                turnInRound.Location = new Point(turnInRound.Location.X + 56, turnInRound.Location.Y);
-                bitoButton.Location = new Point(bitoButton.Location.X + 56, bitoButton.Location.Y);
-                takeAllCards.Location = new Point(takeAllCards.Location.X + 56, takeAllCards.Location.Y);
-                trump.Location = new Point(trump.Location.X + 56, trump.Location.Y);
-                backCard.Location = new Point(backCard.Location.X + 56, backCard.Location.Y);
-                deckCount.Location = new Point(deckCount.Location.X + 56, deckCount.Location.Y);
+                currentPlayer.AddCardToHand(card.Key);               
                 if (card.Value != null)
                 {
                     currentPlayer.AddCardToHand(card.Value);
                 }
             }
+
             currentPlayer = currentRound.PassTurn(players, players.IndexOf(currentPlayer));
 
             var round = new Round(currentPlayer, players[(players.IndexOf(currentPlayer) + 1) % players.Count], game.trump);
@@ -394,6 +389,30 @@ namespace Durak
             RefreshHands();
             RefreshTable();
             bitoCounter = 0;
+        }
+
+        private void UpdateLenElements()
+        {
+            var maxCardsPlayers = 6;
+            foreach (var player in players)
+            {
+                if (player.Hand.Count > maxCardsPlayers && player.Hand.Count >= 6)
+                {
+                    maxCardsPlayers = player.Hand.Count;
+                }
+            }
+            Console.WriteLine(maxCardsPlayers);
+            if (maxCardsPlayers > 5)
+            {
+                cardTable.Location = new Point(413 + (maxCardsPlayers - 6) * 56, cardTable.Location.Y);
+                Width = 937 + (maxCardsPlayers - 6) * 56;
+                turnInRound.Location = new Point(413 + (maxCardsPlayers - 6) * 56, turnInRound.Location.Y);
+                bitoButton.Location = new Point(585 + (maxCardsPlayers - 6) * 56, bitoButton.Location.Y);
+                takeAllCards.Location = new Point(684 + (maxCardsPlayers - 6) * 56, takeAllCards.Location.Y);
+                trump.Location = new Point(800 + (maxCardsPlayers - 6) * 56, trump.Location.Y);
+                backCard.Location = new Point(787 + (maxCardsPlayers - 6) * 56, backCard.Location.Y);
+                deckCount.Location = new Point(780 + (maxCardsPlayers - 6) * 56, deckCount.Location.Y);
+            }
         }
     }
 }
