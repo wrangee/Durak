@@ -68,6 +68,8 @@ namespace Durak
         PictureBox trump = new PictureBox();
         PictureBox backCard = new PictureBox();
         Label deckCount = new Label();
+        Player winner;
+        Player durak;
         public FormGame(List<TextBox> names)
         {    
             foreach (var name in names)
@@ -215,10 +217,12 @@ namespace Durak
                         if (pair.Value == null)
                         {
                             turnInRound.Enabled = true;
+                            bitoButton.Enabled = false; // <-
                         }
                         else
                         {
                             turnInRound.Enabled = false;
+                            bitoButton.Enabled = true; // <-
                         }
                     }
                 }
@@ -270,6 +274,15 @@ namespace Durak
             deckCount.Text = "Карт осталось: " + deckC.ToString();
 
             UpdateLenElements();
+
+            if (winner == null)
+            {
+                winner = game.DetermineWinner();
+            }
+            else
+            {
+                //durak  //- ? ничья???
+            }
         }
 
         private void RefreshHands()
@@ -364,7 +377,7 @@ namespace Durak
                 currentRound = round;
                 currentRound.DrawCardsAfterRound(players, deck);
                 RefreshHands();
-                RefreshTable();            
+                RefreshTable();
                 bitoCounter = 0;
             }
         }

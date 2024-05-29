@@ -50,7 +50,7 @@ namespace Durak
         {
             if (Cards.Count == 0)
             {
-                MessageBox.Show("Нельзя добавить больше 6 TextBox.");
+                MessageBox.Show("Карты закончились!");
             }
 
             Card dealtCard = Cards[0];
