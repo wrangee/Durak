@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{51E03F8B-EB15-407F-8318-461A3995C46D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>Durak</RootNamespace>
     <AssemblyName>Durak</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>

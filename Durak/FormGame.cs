@@ -157,7 +157,7 @@ namespace Durak
                                         pairCount++;
                                     }
                                 }
-                                if (currentRound.defender.Hand.Count >= pairCount)
+                                if (currentRound.defender.Hand.Count > pairCount)
                                 {
                                     if (currentRound.CardsPairs.Count < 6)
                                     {

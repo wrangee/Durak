@@ -77,14 +77,13 @@
             this.cardTable.DefaultCellStyle = dataGridViewCellStyle2;
             this.cardTable.EnableHeadersVisualStyles = false;
             this.cardTable.GridColor = System.Drawing.SystemColors.ButtonFace;
-            this.cardTable.Location = new System.Drawing.Point(551, 41);
-            this.cardTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cardTable.Location = new System.Drawing.Point(413, 33);
             this.cardTable.Name = "cardTable";
             this.cardTable.ReadOnly = true;
             this.cardTable.RowHeadersVisible = false;
             this.cardTable.RowHeadersWidth = 51;
             this.cardTable.RowTemplate.Height = 80;
-            this.cardTable.Size = new System.Drawing.Size(480, 228);
+            this.cardTable.Size = new System.Drawing.Size(360, 185);
             this.cardTable.TabIndex = 0;
             // 
             // first
@@ -161,10 +160,9 @@
             // 
             // turnInRound
             // 
-            this.turnInRound.Location = new System.Drawing.Point(551, 276);
-            this.turnInRound.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.turnInRound.Location = new System.Drawing.Point(413, 224);
             this.turnInRound.Name = "turnInRound";
-            this.turnInRound.Size = new System.Drawing.Size(196, 28);
+            this.turnInRound.Size = new System.Drawing.Size(147, 23);
             this.turnInRound.TabIndex = 4;
             this.turnInRound.Text = "Передать ход оппоненту";
             this.turnInRound.UseVisualStyleBackColor = true;
@@ -172,10 +170,9 @@
             // 
             // bitoButton
             // 
-            this.bitoButton.Location = new System.Drawing.Point(780, 276);
-            this.bitoButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bitoButton.Location = new System.Drawing.Point(585, 224);
             this.bitoButton.Name = "bitoButton";
-            this.bitoButton.Size = new System.Drawing.Size(100, 28);
+            this.bitoButton.Size = new System.Drawing.Size(75, 23);
             this.bitoButton.TabIndex = 5;
             this.bitoButton.Text = "Бито";
             this.bitoButton.UseVisualStyleBackColor = true;
@@ -183,10 +180,9 @@
             // 
             // takeAllCards
             // 
-            this.takeAllCards.Location = new System.Drawing.Point(912, 276);
-            this.takeAllCards.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.takeAllCards.Location = new System.Drawing.Point(684, 224);
             this.takeAllCards.Name = "takeAllCards";
-            this.takeAllCards.Size = new System.Drawing.Size(92, 28);
+            this.takeAllCards.Size = new System.Drawing.Size(69, 23);
             this.takeAllCards.TabIndex = 6;
             this.takeAllCards.Text = "Взять";
             this.takeAllCards.UseVisualStyleBackColor = true;
@@ -194,14 +190,15 @@
             // 
             // FormGame
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1228, 330);
+            this.ClientSize = new System.Drawing.Size(921, 268);
             this.Controls.Add(this.takeAllCards);
             this.Controls.Add(this.bitoButton);
             this.Controls.Add(this.turnInRound);
             this.Controls.Add(this.cardTable);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "FormGame";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Дурак";
